@@ -1,1 +1,1 @@
-Example Laravel API
+#Example of Laravel RESTful API
