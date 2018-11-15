@@ -10,13 +10,22 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
+    const ADMINISTRATOR = 0;
+    const EDITOR = 1;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','role'
+    ];
+
+    public static $rulesValidation = [
+        'name' => 'required|min:3',
+        'email' => 'email|required|unique:users,email',
+        'password' => 'required',
+        'role' => 'required'
     ];
 
     /**
@@ -25,6 +34,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'remember_token',
     ];
+
+
 }

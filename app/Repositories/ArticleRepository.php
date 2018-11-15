@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Article;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Validator;
+
 
 class ArticleRepository
 {
@@ -12,11 +14,28 @@ class ArticleRepository
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::all();
+        $title = $request->input('title');
+        $author = $request->input('author');
+
+        $publishedAtDate = $request->input('published_at');
+        $publishedAtDate = str_replace(" ", "", $publishedAtDate);
+
+        $publishedAtDate = explode("-", $publishedAtDate);
+        $publishedAtDateFrom = isset($publishedAtDate[0]) ? $publishedAtDate[0] : '';
+        $publishedAtDateTo = isset($publishedAtDate[1]) ? $publishedAtDate[1] : '';
+
+        $articles = Article::filter($title, $author, $publishedAtDateFrom,
+            $publishedAtDateTo);
+        if ($request->has('export')) {
+            $articles = $articles->get(['id', 'title', 'body', 'author', 'published_at']);
+        } else {
+            $articles = $articles->orderBy('id', 'desc')->paginate(9);
+        }
         return response()->json(['data' => $articles, 'status' => Response::HTTP_OK]);
     }
+
 
     /**
      * @param Request $request
@@ -25,8 +44,19 @@ class ArticleRepository
     public function store(Request $request)
     {
         try {
-            $article = Article::create($request->all());
-            return response()->json(['data' => $article, 'status' => Response::HTTP_CREATED]);
+            $validator = Validator::make($request->all(), Article::$rulesValidation);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors()->all();
+                return response()->json(['data' => $errors,
+                    'status' => Response::HTTP_INTERNAL_SERVER_ERROR]);
+            } else {
+
+                $data = $request->all();
+                $data['image'] = 'storage/' . $request->file('image')->store('images');
+                $article = Article::create($data);
+                return response()->json(['data' => $article, 'status' => Response::HTTP_CREATED]);
+            }
         } catch (\Exception $exception) {
             return response()->json(['data' => $exception->getMessage(), 'status' => Response::HTTP_NOT_FOUND]);
         }

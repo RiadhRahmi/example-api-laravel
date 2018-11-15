@@ -23,6 +23,9 @@ class ArticlesTableSeeder extends Seeder
           Article::create([
              'title' => $faker->sentence,
              'body' => $faker->paragraph,
+             'image' => $faker->imageUrl(640, 480, 'cats'),
+             'author' => $faker->firstNameMale.' '.$faker->lastName ,
+             'published_at' => $faker->date('d/m/Y','now'),
          ]);
      }
 
