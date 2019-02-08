@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
       // Let's clear the users table first
       User::truncate();
 
-      $faker = Factory::create();
+//      $faker = Factory::create();
 
       // Let's make sure everyone has the same password and
       // let's hash it before the loop, or else our seeder
@@ -31,15 +31,19 @@ class UsersTableSeeder extends Seeder
       ]);
 
       // And now let's generate a few dozen users for our app:
-      for ($i = 0; $i < 50; $i++) {
-          User::create([
-              'name' => $faker->name,
-              'email' => $faker->email,
-              'password' => $password,
-              'role' => User::EDITOR,
+//      for ($i = 0; $i < 50; $i++) {
+//          User::create([
+//              'name' => $faker->name,
+//              'email' => $faker->email,
+//              'password' => $password,
+//              'role' => User::EDITOR,
+//
+//          ]);
+//      }
 
-          ]);
-      }
+        factory(User::class, 50)->create();
+
+
     }
 }
 
