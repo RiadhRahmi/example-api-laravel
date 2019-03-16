@@ -17,9 +17,9 @@ use Illuminate\Http\Request;
 Route::post('login', 'API\PassportController@login');
 Route::post('register', 'API\PassportController@register');
 
-//Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:api')->group(function () {
 
-    //Route::group(['middleware' => 'permission:admin'], function () {
+    Route::group(['middleware' => 'permission:admin'], function () {
         //  User routes
         Route::get('users', 'UserController@index');
         Route::post('users', 'UserController@store');
@@ -31,16 +31,16 @@ Route::post('register', 'API\PassportController@register');
         //Articles routes
         Route::post('articles/{id}/update', 'ArticleController@update');
         Route::delete('articles/{id}', 'ArticleController@destroy');
-    //});
+    });
 
-    //Route::group(['middleware' => 'permission:admin,editor'], function () {
+    Route::group(['middleware' => 'permission:admin,editor'], function () {
         // Article routes
         Route::post('articles', 'ArticleController@index');
         Route::get('articles', 'ArticleController@index');
         Route::post('articles/add', 'ArticleController@store');
         Route::get('articles/{id}', 'ArticleController@show');
-    //});
+    });
 
     //logout
     Route::get('logout', 'API\PassportController@logout');
-//});
+});
