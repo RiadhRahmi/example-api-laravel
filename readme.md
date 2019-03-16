@@ -7,5 +7,7 @@
 <li>php artisan key:generate</li>
 <li>php artisan migrate</li>
 <li>fill the database with some data: php artisan db:seed</li>
+ <li>php artisan storage:link</li>
+ <li>php artisan passport:install</li>
 <li>You can use <a href="https://www.getpostman.com/" target="_blank">Postman tool </a> to test the services.</li>
 </ul>
